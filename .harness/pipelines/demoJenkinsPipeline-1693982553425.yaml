@@ -31,3 +31,26 @@ pipeline:
             spec: {}
             type: Cloud
         type: CI
+    - stage:
+        name: Deploy
+        identifier: Deploy
+        description: ""
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: ShellScript
+                  name: ShellScript_1
+                  identifier: ShellScript_1
+                  spec:
+                    shell: PowerShell
+                    onDelegate: true
+                    source:
+                      type: Inline
+                      spec:
+                        script: echo 'Deploying....'
+                    environmentVariables: []
+                    outputVariables: []
+                  timeout: 10m
+        tags: {}
