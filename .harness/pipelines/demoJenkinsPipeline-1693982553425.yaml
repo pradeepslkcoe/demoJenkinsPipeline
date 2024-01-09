@@ -10,47 +10,47 @@ pipeline:
         connectorRef: account.Github
         repoName: pradeepslkcoe/demoJenkinsPipeline
   stages:
-    - stage:
-        identifier: build
-        name: build
-        spec:
-          cloneCodebase: true
-          execution:
-            steps:
-              - step:
-                  identifier: echo
-                  name: echo
-                  spec:
-                    command: echo hello world
-                  timeout: ""
-                  type: Run
-          platform:
-            arch: Amd64
-            os: Linux
-          runtime:
-            spec: {}
-            type: Cloud
-        type: CI
-    - stage:
-        name: Deploy
-        identifier: Deploy
-        description: ""
-        type: Custom
-        spec:
-          execution:
-            steps:
-              - step:
-                  type: ShellScript
-                  name: ShellScript_1
-                  identifier: ShellScript_1
-                  spec:
-                    shell: PowerShell
-                    onDelegate: true
-                    source:
-                      type: Inline
+    - parallel:
+        - stage:
+            name: Deploy
+            identifier: Deploy
+            description: ""
+            type: Custom
+            spec:
+              execution:
+                steps:
+                  - step:
+                      type: ShellScript
+                      name: ShellScript_1
+                      identifier: ShellScript_1
                       spec:
-                        script: echo 'Deploying....'
-                    environmentVariables: []
-                    outputVariables: []
-                  timeout: 10m
-        tags: {}
+                        shell: PowerShell
+                        onDelegate: true
+                        source:
+                          type: Inline
+                          spec:
+                            script: echo 'Deploying....'
+                        environmentVariables: []
+                        outputVariables: []
+                      timeout: 10m
+            tags: {}
+        - stage:
+            name: Trigger_Scripts
+            identifier: Trigger_Scripts
+            description: ""
+            type: Custom
+            spec:
+              execution:
+                steps:
+                  - step:
+                      type: Http
+                      name: Http_1
+                      identifier: Http_1
+                      spec:
+                        url: https://httpbin.org/get
+                        method: GET
+                        headers: []
+                        inputVariables: []
+                        outputVariables: []
+                      timeout: 10s
+            tags: {}
